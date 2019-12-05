@@ -36,7 +36,7 @@ _READING INPUT GROUPS:_
 
 | Object/Property | Returns | Use case |
 | --- | --- | --- |
-| `inputGroups.get("group name")` | `InputGroup` Object based on its name | `inputGroups.get("input_group_A")` returns InputGroup with the name `input_group_A` |
+| `inputGroups.get("group name")` | `InputGroup` Object based on its name | `inputGroups.get("input_group_A")` returns `InputGroup` with the name "_input_group_A_" |
 | `inputGroups.get("group name").present` | `boolean` true/false is input group present (based on the anchor `Marker`) | `inputGroups.get("input_group_A").present` returns `true` if input_group_A is present and `false` if it is absent |
 | `inputGroups.get("group name").anchor` | `Marker` Object for the input group's anchor | `inputGroups.get("input_group_A").anchor` returns the `Marker` object which is the input_group_A's anchor marker.<br>By extension it also gives access to all `Marker` properties, e.g.  `inputGroups.get("input_group_A").anchor.center` returns the anchor marker's center coordinate. |
 
@@ -47,4 +47,16 @@ _READING INPUTS:_
 
 | Object/Property | Returns | Use case |
 | --- | --- | --- |
+| `inputs.get("group name-input name")` | `Input` Object based on the input group's name + `-` + input's name | `inputs.get("groupA-input1")` returns the `Input` "_input1_" in `InputGroup` "_groupA_" |
 
+<br>
+<br>
+
+| Object/Property | Returns |
+| --- | --- |
+| `inputs.get("group name-input name").type` | `String` of the input's type:<br>_BUTTON, TOGGLE, KNOB, SLIDER_ |
+| `inputs.get("group name-input name").present` | `boolean` true/false is input group present (based on the actor `Marker`) |
+| `inputs.get("group name-input name").actor` | `Marker` Object for the input's actor |
+| `inputs.get("group name-input name").val` | `float` input's value based on its type.<br><br>_BUTTON_: 0.0 to 1.0. Button pressed returns a value closer to 1.0.<br><br>_TOGGLE_: 0.0 to 1.0. Less than 0.5 for state A and more than 0.5 for state B.<br><br>_KNOB_: -PI to PI. Rotation of the knob with regard to its anchor.<br><br>_SLIDER_: 0.0 to 1.0. Slider position along its track from start (0.0) to end (1.0). |
+| `inputs.get("group name-input name").dir` | `int` input's movement direction (-1 or 1 or 0) based on its type.<br><br>_BUTTON_: button pressed (1), button released (-1).<br><br>_TOGGLE_: state B to A (1), state A to B (-1).<br><br>_KNOB_: clockwise (1), counter-clockwise (-1).<br><br>_SLIDER_: start to end (1), end to start (-1). |
+| `inputs.get("group name-input name").smoothing` | `float` 0.0 to 1.0. input value's smoothing factor. A higher value will result in smoother values over time, i.e. the value is less sensitive to change. |
