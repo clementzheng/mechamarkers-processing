@@ -26,29 +26,7 @@ void draw() {
   background(255);
   rectMode(CENTER);
   
-  if (input.get("testgroup-knob").dir > 0) {
-    knobCounter++;
-  } else if (input.get("testgroup-knob").dir < 0) {
-    knobCounter--;
-  }
-  text(knobCounter, 200, 300);
-  
-  pushMatrix();
-  fill(100);
-  if (input.get("testgroup-b1").val > 0.5) {
-    fill(255);
-  }
-  rect(50, 50, 20, 20);
-  fill(100);
-  if (input.get("testgroup-b2").val > 0.5) {
-    fill(255);
-  }
-  rect(100, 50, 20, 20);
-
-  fill(0);
-  translate(200, 200);
-  rotate(input.get("testgroup-knob").val);
-  rect(0, 0, 40, 40);
-  
-  popMatrix();
+  float x = markers.get(0).center.x;
+  float y = markers.get(0).center.y;
+  ellipse(x, y, 20, 20);
 }

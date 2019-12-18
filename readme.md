@@ -27,7 +27,7 @@ _READING MARKERS:_
 | `markers.get(X).allCorners` | `PVector[]` Array of marker corners from starting from top left and progressing clockwise | `markers.get(0).allCorners[1]` returns Marker 0 top right corner coordinate |
 | `markers.get(X).present` | `boolean` true/false is Marker present | `markers.get(0).present` returns `true` if Marker 0 is present and `false` if it is absent |
 | `markers.get(X).timeout` | `int` Marker timeout value in milliseconds. If the Marker is detected within this timeframe its `present` property will register as `true`; and vice versa. | `markers.get(0).timeout = 100;` sets Marker 0 timeout to 100ms |
-| `markers.get(X).smoothing` | `float` Marker smoothing value between 0.0 to 1.0. The higher the value the more the `center` and `corner` coordinates will be smoothed (with previous coordinates). | `markers.get(0).smoothing = 0.7;` sets Marker 0 smoothing to 0.7. i.e. 70% of the previous coordinate and 30% of the new coordinate will be used to update the `center` and `corner` coordinates. |
+| `markers.get(X).smoothing` | `float` Marker smoothing value between 0.0 to 1.0. The higher the value the more the `center` and `corner` coordinates will be smoothed (with previous coordinates) (default is 0.5). | `markers.get(0).smoothing = 0.7;` sets Marker 0 smoothing to 0.7. i.e. 70% of the previous coordinate and 30% of the new coordinate will be used to update the `center` and `corner` coordinates. |
 
 <br>
 <br>
@@ -59,4 +59,4 @@ _READING INPUTS:_
 | `inputs.get("group name-input name").actor` | `Marker` Object for the input's actor |
 | `inputs.get("group name-input name").val` | `float` input's value based on its type.<br><br>_BUTTON_: 0.0 to 1.0. Button pressed returns a value closer to 1.0.<br>_TOGGLE_: 0.0 to 1.0. Less than 0.5 for state A and more than 0.5 for state B.<br>_KNOB_: -PI to PI. Rotation of the knob with regard to its anchor.<br>_SLIDER_: 0.0 to 1.0. Slider position along its track from start (0.0) to end (1.0). |
 | `inputs.get("group name-input name").dir` | `int` input's movement direction (-1 or 1 or 0) based on its type.<br><br>_BUTTON_: button pressed (1), button released (-1).<br>_TOGGLE_: state B to A (1), state A to B (-1).<br>_KNOB_: clockwise (1), counter-clockwise (-1).<br>_SLIDER_: start to end (1), end to start (-1). |
-| `inputs.get("group name-input name").smoothing` | `float` 0.0 to 1.0. input value's smoothing factor. A higher value will result in smoother values over time, i.e. the value is less sensitive to change. |
+| `inputs.get("group name-input name").smoothing` | `float` 0.0 to 1.0. input value's smoothing factor (default is 0.5). A higher value will result in smoother values over time, i.e. the value is less sensitive to change. |
