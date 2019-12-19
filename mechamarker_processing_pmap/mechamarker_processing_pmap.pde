@@ -31,9 +31,9 @@ void draw() {
   fill(0);
   rect(0, 0, width, height);
   
-  if (input.get("testgroup-knob").dir > 0) {
+  if (inputs.get("testgroup-knob").dir > 0) {
     knobCounter++;
-  } else if (input.get("testgroup-knob").dir < 0) {
+  } else if (inputs.get("testgroup-knob").dir < 0) {
     knobCounter--;
   }
   

@@ -452,9 +452,11 @@ float SMOOTHING = 0.5;
 
 Mechamarkers mechamarkers; // declare Mechamarkers object
 
+import java.util.Map;
+
 HashMap<Integer, Marker> markers = new HashMap<Integer, Marker>();
-HashMap<String, InputGroup> inputGroup = new HashMap<String, InputGroup>();
-HashMap<String, Input> input = new HashMap<String, Input>();
+HashMap<String, InputGroup> inputGroups = new HashMap<String, InputGroup>();
+HashMap<String, Input> inputs = new HashMap<String, Input>();
 
 class Mechamarkers {
 
@@ -535,7 +537,7 @@ class Marker {
 ///////////////////////////////
 
 
-PVector xaxis = new PVector(1, 0);
+PVector xaxis = new PVector(-1, 0);
 
 class InputGroup {
 
@@ -565,7 +567,7 @@ class InputGroup {
 
   void addInput(String n, String t, Marker act, float rpd, float rpa, float rpd2, float rpa2) {
     inputList.add(new Input(n, t, act, rpd, rpa, rpd2, rpa2));
-    input.put(name+"-"+n, inputList.get(inputList.size()-1));
+    inputs.put(name+"-"+n, inputList.get(inputList.size()-1));
   }
 
   void update() {
@@ -647,9 +649,16 @@ class Input {
       PVector epos = PVector.mult(xaxis, relDistEnd);
       epos.rotate(relAngleEnd - parent.angleOffset);
       PVector track = PVector.sub(epos, spos);
-      v = lineCPt(pos, epos, spos);
+      v = lineCPt(pos, spos, epos);
       v = constrain(v, 0, 1);
       val = (1-smoothing)*v + smoothing*val;
+      pushMatrix();
+      translate(width/2, height/2);
+      stroke(255, 0, 0);
+      fill(0, 255, 0);
+      ellipse(pos.x, pos.y, 10, 10);
+      line(spos.x, spos.y, epos.x, epos.y);
+      popMatrix();
       break;
 
     default:
@@ -696,7 +705,6 @@ float vecAngleBetween(PVector vec1, PVector vec2) {
   // return Math.atan2(vec1.y, vec1.x) - Math.atan2(vec2.y, vec2.x);
   return atan2(vec1.x*vec2.y-vec1.y*vec2.x, vec1.x*vec2.x+vec1.y*vec2.y);
 }
-
 
 
 
@@ -821,8 +829,8 @@ void webSocketEvent(String msg) {
     case "input config":
       println(msg);
       mechamarkers.inputGroupList = new ArrayList<InputGroup>();
-      inputGroup = new HashMap<String, InputGroup>();
-      input = new HashMap<String, Input>();
+      inputGroups = new HashMap<String, InputGroup>();
+      inputs = new HashMap<String, Input>();
       String inputGroupConfigString = json.getString("config");
       JSONObject inputGroupConfig = parseJSONObject(inputGroupConfigString);
       try {
@@ -836,27 +844,27 @@ void webSocketEvent(String msg) {
             float ms = inputGroupObj.getInt("markerSize");
             mechamarkers.inputGroupList.add(new InputGroup(n, markers.get(id), ms));
             markers.get(id).timeout = tO;
-            inputGroup.put(n, mechamarkers.inputGroupList.get(i));
-            
-            JSONArray inputs = inputGroupObj.getJSONArray("inputs");
-            if (inputs.size() > 0) {
-              for (int j=0; j<inputs.size(); j++) {
-                JSONObject input = inputs.getJSONObject(j);
-                String iN = input.getString("name");
-                String t = input.getString("type");
-                int aID = input.getInt("actorID");
-                int aTO = input.getInt("detectWindow");
-                JSONObject rp = input.getJSONObject("relativePosition");
+            inputGroups.put(n, mechamarkers.inputGroupList.get(i));
+            JSONArray jinputs = inputGroupObj.getJSONArray("inputs");
+            if (jinputs.size() > 0) {
+              for (int j=0; j<jinputs.size(); j++) {
+                JSONObject jinput = jinputs.getJSONObject(j);
+                String iN = jinput.getString("name");
+                String t = jinput.getString("type");
+                int aID = jinput.getInt("actorID");
+                int aTO = jinput.getInt("detectWindow");
+                JSONObject rp = jinput.getJSONObject("relativePosition");
                 float rpd = rp.getFloat("distance");
                 float rpa = rp.getFloat("angle");
                 float rpd2 = rpd;
                 float rpa2 = rpa;
                 if (t.equals("SLIDER")) {
-                  JSONObject ep = input.getJSONObject("endPosition");
+                  JSONObject ep = jinput.getJSONObject("endPosition");
                   rpd2 = ep.getFloat("distance");
                   rpa2 = ep.getFloat("angle");
                 }
-                inputGroup.get(n).addInput(iN, t, markers.get(aID), rpd, rpa, rpd2, rpa2);
+                println(inputGroups);
+                inputGroups.get(n).addInput(iN, t, markers.get(aID), rpd, rpa, rpd2, rpa2);
                 markers.get(aID).timeout = aTO;
               }
             }

@@ -96,7 +96,7 @@ class Marker {
 ///////////////////////////////
 
 
-PVector xaxis = new PVector(1, 0);
+PVector xaxis = new PVector(-1, 0);
 
 class InputGroup {
 
@@ -208,9 +208,16 @@ class Input {
       PVector epos = PVector.mult(xaxis, relDistEnd);
       epos.rotate(relAngleEnd - parent.angleOffset);
       PVector track = PVector.sub(epos, spos);
-      v = lineCPt(pos, epos, spos);
+      v = lineCPt(pos, spos, epos);
       v = constrain(v, 0, 1);
       val = (1-smoothing)*v + smoothing*val;
+      pushMatrix();
+      translate(width/2, height/2);
+      stroke(255, 0, 0);
+      fill(0, 255, 0);
+      ellipse(pos.x, pos.y, 10, 10);
+      line(spos.x, spos.y, epos.x, epos.y);
+      popMatrix();
       break;
 
     default:
@@ -397,10 +404,9 @@ void webSocketEvent(String msg) {
             mechamarkers.inputGroupList.add(new InputGroup(n, markers.get(id), ms));
             markers.get(id).timeout = tO;
             inputGroups.put(n, mechamarkers.inputGroupList.get(i));
-            
             JSONArray jinputs = inputGroupObj.getJSONArray("inputs");
-            if (inputs.size() > 0) {
-              for (int j=0; j<inputs.size(); j++) {
+            if (jinputs.size() > 0) {
+              for (int j=0; j<jinputs.size(); j++) {
                 JSONObject jinput = jinputs.getJSONObject(j);
                 String iN = jinput.getString("name");
                 String t = jinput.getString("type");
@@ -416,6 +422,7 @@ void webSocketEvent(String msg) {
                   rpd2 = ep.getFloat("distance");
                   rpa2 = ep.getFloat("angle");
                 }
+                println(inputGroups);
                 inputGroups.get(n).addInput(iN, t, markers.get(aID), rpd, rpa, rpd2, rpa2);
                 markers.get(aID).timeout = aTO;
               }
